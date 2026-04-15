@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a.s.k Aquarium | Premium Fish Store</title>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          // TODO: Replace with your actual EmailJS Public Key
+          emailjs.init("A1i90tlFb5ykYcnRA");
+       })();
+    </script>
+
+    <style>
+        /* --- GLOBAL STYLES & VARIABLES --- */
+        :root {
+            --primary-color: #4cb6d6;
+            --secondary-color: #1e88e5;
+            --text-dark: #333;
+            --bg-light: #f9f9f9;
+            --danger: #ff4d4d;
+            --youtube-red: #ff0000;
+        }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff; color: var(--text-dark); overflow-x: hidden; }
+        * { box-sizing: border-box; }
+        .view { display: none; min-height: 100vh; }
+        
+        /* --- STEP 1: WELCOME ANIMATION --- */
+        #welcome-view {
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white;
+            animation: fadeOut 0.5s ease 2.5s forwards; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
+        }
+        .welcome-text {
+            font-size: 2.5rem; font-weight: bold; text-align: center;
+            animation: bounceIn 1.5s cubic-bezier(0.28, 0.84, 0.42, 1) forwards; text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* --- STEP 2: LOGIN PAGE --- */
+        #login-view { background-color: var(--bg-light); display: none; justify-content: center; align-items: center; animation: fadeIn 1s ease forwards; }
+        .login-box {
+            background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%; max-width: 400px; text-align: center; transform: translateY(20px); animation: slideUp 0.6s ease forwards;
+        }
+        .login-box h2 { color: var(--primary-color); margin-bottom: 20px;}
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group input, .input-group textarea {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-top: 5px; font-family: inherit; transition: 0.3s;
+        }
+        .input-group input:focus, .input-group textarea:focus { border-color: var(--primary-color); outline: none; }
+        
+        .btn {
+            background-color: var(--primary-color); color: white; border: none; padding: 12px 20px; width: 100%; border-radius: 8px;
+            cursor: pointer; font-size: 16px; margin-top: 10px; transition: all 0.3s ease; font-weight: bold;
+        }
+        .btn:hover:not(:disabled) { background-color: var(--secondary-color); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(76, 182, 214, 0.4); }
+        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        .btn-google { background-color: #db4437; }
+        .btn-google:hover:not(:disabled) { background-color: #c53929; box-shadow: 0 4px 10px rgba(219, 68, 55, 0.4); }
+
+        /* --- STEP 3: MAIN SHOPPING SITE --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; border-bottom: 1px solid #eee; background: white;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary-color); }
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .cart-icon-container { position: relative; cursor: pointer; font-size: 1.5rem; transition: 0.3s; }
+        .cart-badge {
+            position: absolute; top: -8px; right: -10px; background: var(--danger); color: white;
+            font-size: 0.75rem; font-weight: bold; padding: 2px 6px; border-radius: 50%;
+        }
+        .search-bar { padding: 15px 20px; background: #f0f4f8; }
+        .search-bar input { width: 100%; padding: 12px; border: none; border-radius: 20px; background: white; outline: none; font-size: 1rem; }
+        .hero {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; text-align: center; padding: 50px 20px;
+        }
+        
+        .contest-banner {
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #d81b60;
+            padding: 20px; text-align: center; cursor: pointer; font-weight: bold; animation: pulseBanner 2s infinite;
+        }
+
+        .section-title { text-align: center; margin: 40px 0 20px 0; font-size: 1.8rem; position: relative;}
+        .section-title::after { content: ''; display: block; width: 50px; height: 3px; background: var(--primary-color); margin: 10px auto; }
+        
+        .categories { display: flex; justify-content: space-around; flex-wrap: wrap; padding: 10px 20px; }
+        .category-item { text-align: center; margin: 10px; cursor: pointer; }
+        .category-circle {
+            width: 90px; height: 90px; background-color: #e0f7fa; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 10px;
+            border: 2px solid var(--primary-color); overflow: hidden; transition: 0.3s;
+        }
+        .category-item:hover .category-circle { transform: translateY(-5px); }
+
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 20px; }
+        .product-card {
+            border: 1px solid #eee; border-radius: 12px; padding: 15px; text-align: center; background: white; transition: 0.3s;
+        }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: var(--primary-color);}
+        .product-card img { width: 100%; height: 150px; object-fit: contain; margin-bottom: 15px; }
+        .product-price { font-weight: bold; color: var(--secondary-color); margin: 10px 0; }
+        
+        footer { background: var(--bg-light); padding: 30px; text-align: center; border-top: 1px solid #eee; margin-top: 40px;}
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #888; }
+        .modal-img { width: 180px; height: 180px; object-fit: contain; margin-bottom: 15px; }
+
+        @keyframes fadeOut { to { opacity: 0; visibility: hidden; display: none; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounceIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes pulseBanner { 0% { box-shadow: 0 0 0 0 rgba(216, 27, 96, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(216, 27, 96, 0); } 100% { box-shadow: 0 0 0 0 rgba(216, 27, 96, 0); } }
+    </style>
+</head>
+<body>
+  <div id="welcome-view" class="view">
+        <div class="welcome-text">🐟<br>Welcome back to<br>a.s.k aquarium</div>
+    </div>
+
+    <div id="login-view" class="view">
+        <div class="login-box">
+            <h2 id="form-title">Login to A.S.K</h2>
+            <div class="input-group"><label>Email</label><input type="email" id="login-email" placeholder="Enter email"></div>
+            <div class="input-group"><label>Password</label><input type="password" id="login-password" placeholder="Enter password"></div>
+            <div class="input-group" id="confirm-pass-group" style="display: none;"><label>Confirm Password</label><input type="password" id="confirm-password" placeholder="Repeat password"></div>
+            <button class="btn" id="main-auth-btn" onclick="handleAuthAction()">Login</button>
+            <p style="font-size: 13px;"><span id="toggle-text">New here? </span><span class="auth-toggle-link" style="color:var(--primary-color); cursor:pointer;" onclick="toggleAuthMode()" id="toggle-link">Sign Up</span></p>
+            <button class="btn btn-google" onclick="handleGoogleLogin()">Continue with Google</button>
+        </div>
+    </div>
+
+    <div id="shop-view" class="view">
+        <header>
+            <div class="logo">🐟 a.s.k Aquarium</div>
+            <div class="header-actions">
+                <div class="cart-icon-container" onclick="openCartModal()">🛒 <span class="cart-badge" id="cart-badge">0</span></div>
+                <button class="btn" style="width:auto; padding:5px 10px; margin:0; background:#eee; color:#333;" onclick="handleLogout()">Logout</button>
+            </div>
+        </header>
+        <div class="search-bar"><input type="text" id="search-input" oninput="handleSearch()" placeholder="🔍 Search fish, food, accessories..."></div>
+        <div class="hero"><h2>Aquarium Excellence</h2><p>Premium quality for your aquatic friends.</p></div>
+        <div class="contest-banner" onclick="openContestModal()">🎉 FREE FISH CONTEST! Subscribe to our YouTube & claim your prize! 🎉</div>
+        
+        <h3 class="section-title">Categories</h3>
+        <div class="categories">
+            <div class="category-item"><div class="category-circle"><img src="https://placehold.co/80x80?text=Tank" alt="Tank"></div>Tanks</div>
+            <div class="category-item"><div class="category-circle"><img src="https://placehold.co/80x80?text=Food" alt="Food"></div>Food</div>
+            <div class="category-item"><div class="category-circle"><img src="https://placehold.co/80x80?text=Filter" alt="Filter"></div>Filters</div>
+            <div class="category-item"><div class="category-circle"><img src="https://placehold.co/80x80?text=Decor" alt="Decor"></div>Decor</div>
+        </div>
+        <h3 class="section-title">Our Products</h3>
+        <div class="products-grid" id="product-container"></div>
+        <footer><p>© 2026 a.s.k Aquarium | Chennai, India</p></footer>
+    </div>
+
+    <div id="admin-view" class="view">
+        <div class="admin-header"><h2>Admin Dashboard</h2><button class="btn" style="width:auto;" onclick="handleLogout()">Logout</button></div>
+        <div class="admin-card">
+            <h3>Orders Received (<span id="order-count">0</span>)</h3>
+            <div style="overflow-x: auto;"><table class="order-table" style="width:100%; border-collapse: collapse;"><thead><tr><th style="border:1px solid #ddd; padding:8px;">ID/Date</th><th style="border:1px solid #ddd; padding:8px;">Customer</th><th style="border:1px solid #ddd; padding:8px;">Items</th><th style="border:1px solid #ddd; padding:8px;">Total</th></tr></thead><tbody id="orders-list"></tbody></table></div>
+        </div>
+        <div class="admin-card">
+            <h3>Inventory Management</h3>
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;">
+                <input type="text" id="new-prod-name" placeholder="Product Name">
+                <input type="number" id="new-prod-price" placeholder="Price (₹)">
+                <input type="url" id="new-prod-img" placeholder="Image URL">
+                <button class="btn" style="width:auto;" onclick="addProduct()">Add Item</button>
+            </div>
+            <table class="order-table" style="width:100%; border-collapse: collapse;"><thead><tr><th style="border:1px solid #ddd; padding:8px;">Name</th><th style="border:1px solid #ddd; padding:8px;">Price</th><th style="border:1px solid #ddd; padding:8px;">Action</th></tr></thead><tbody id="admin-product-list"></tbody></table>
+        </div>
+    </div>
+
+    <div id="product-modal" class="modal-overlay"><div class="modal-content"><span class="close-modal" onclick="closeModal('product-modal')">&times;</span><img id="modal-img" class="modal-img"><h2 id="modal-title"></h2><div id="modal-price" style="font-size:1.4rem; font-weight:bold; color:var(--secondary-color); margin-bottom:15px;"></div><button class="btn" id="modal-order-btn">Add to Cart</button></div></div>
+    <div id="cart-modal" class="modal-overlay"><div class="modal-content"><span class="close-modal" onclick="closeModal('cart-modal')">&times;</span><h2>Your Cart</h2><div id="cart-items-container"></div><div id="cart-total-display" style="font-weight:bold; margin:20px 0;"></div><button class="btn" onclick="openCheckoutModal()" id="checkout-btn">Checkout</button></div></div>
+    <div id="checkout-modal" class="modal-overlay"><div class="modal-content"><span class="close-modal" onclick="closeModal('checkout-modal')">&times;</span><h2>Delivery Details</h2><div class="input-group"><input type="text" id="checkout-name" placeholder="Full Name"></div><div class="input-group"><input type="tel" id="checkout-phone" placeholder="Mobile Number"></div><div class="input-group"><textarea id="checkout-address" rows="3" placeholder="Full Address"></textarea></div><button class="btn" id="checkout-submit-btn" onclick="placeOrder()">Confirm Order</button></div></div>
+    <div id="success-modal" class="modal-overlay"><div class="modal-content"><h2>✅ Order Confirmed!</h2><p>Check your email for details.</p><button class="btn" onclick="closeModal('success-modal')">OK</button></div></div>
+    <div id="contest-modal" class="modal-overlay"><div class="modal-content"><span class="close-modal" onclick="closeModal('contest-modal')">&times;</span><h2 style="color:var(--youtube-red);">YouTube Contest</h2><p>Subscribe and upload a screenshot!</p><a href="https://youtube.com/@YOUR_CHANNEL" target="_blank" class="btn" style="background:var(--youtube-red); text-decoration:none;">▶ Subscribe Now</a><div class="input-group"><input type="email" id="contest-email" placeholder="Your Email"></div><div class="input-group"><input type="file" id="contest-screenshot" accept="image/*"></div><button class="btn" id="contest-submit-btn" onclick="submitContestScreenshot()">Upload to Drive</button></div></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+  apiKey: "AIzaSyDqx06z-nB8Dta0ihspJoouu31iIIq-hRo",
+  authDomain: "ask-dbb2b.firebaseapp.com",
+  projectId: "ask-dbb2b",
+  storageBucket: "ask-dbb2b.firebasestorage.app",
+  messagingSenderId: "834568479108",
+  appId: "1:834568479108:web:78f8fb3cd89b97cbf2bdd1"
+};
+        let app, auth, provider;
+        let isFirebaseValid = firebaseConfig.apiKey !== "YOUR_API_KEY";
+        if (isFirebaseValid) { app = initializeApp(firebaseConfig); auth = getAuth(app); provider = new GoogleAuthProvider(); }
+
+        let products = JSON.parse(localStorage.getItem('ask_products')) || [
+            { id: 1, name: "Transparent Fish Bowl", price: 1250, img: "https://placehold.co/300x300?text=Fish+Bowl" },
+            { id: 2, name: "Aquarium Tank 15inch", price: 7699, img: "https://placehold.co/300x300?text=Tank" },
+            { id: 3, name: "Power Filter Pro", price: 2600, img: "https://placehold.co/300x300?text=Filter" }
+        ];
+        let orders = JSON.parse(localStorage.getItem('ask_orders')) || [];
+        let cart = [];
+        let currentUser = null;
+        let isSignUp = false;
+
+        setTimeout(() => { document.getElementById('welcome-view').style.display = 'none'; route(); }, 3000);
+        if (isFirebaseValid) { onAuthStateChanged(auth, (user) => { currentUser = user; route(); }); }
+
+        function route() {
+            document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+            if (currentUser) {
+                if (currentUser.email === 'shakeer8248@gmail.com') { document.getElementById('admin-view').style.display = 'block'; renderAdmin(); } 
+                else { document.getElementById('shop-view').style.display = 'block'; renderShop(); updateCartUI(); }
+            } else { document.getElementById('login-view').style.display = 'flex'; }
+        }
+
+        window.toggleAuthMode = () => {
+            isSignUp = !isSignUp;
+            document.getElementById('confirm-pass-group').style.display = isSignUp ? 'block' : 'none';
+            document.getElementById('main-auth-btn').innerText = isSignUp ? 'Create Account' : 'Login';
+            document.getElementById('form-title').innerText = isSignUp ? 'Sign Up' : 'Login';
+        };
+        window.handleAuthAction = () => {
+            const email = document.getElementById('login-email').value; const pass = document.getElementById('login-password').value;
+            if(isSignUp) { createUserWithEmailAndPassword(auth, email, pass).catch(e => alert(e.message)); } 
+            else { signInWithEmailAndPassword(auth, email, pass).catch(e => alert(e.message)); }
+        };
+        window.handleGoogleLogin = () => signInWithPopup(auth, provider).catch(e => alert(e.message));
+        window.handleLogout = () => signOut(auth);
+
+        function renderShop(filter = "") {
+            const container = document.getElementById('product-container'); container.innerHTML = '';
+            products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase())).forEach(p => {
+                const card = document.createElement('div'); card.className = 'product-card';
+                card.onclick = () => openProduct(p);
+                card.innerHTML = `<img src="${p.img}"><div>${p.name}</div><div class="product-price">₹${p.price}</div><button class="btn-add">View</button>`;
+                container.appendChild(card);
+            });
+        }
+        window.handleSearch = () => renderShop(document.getElementById('search-input').value);
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        window.openProduct = (p) => {
+            document.getElementById('modal-title').innerText = p.name; document.getElementById('modal-price').innerText = `₹${p.price}`;
+            document.getElementById('modal-img').src = p.img; document.getElementById('modal-order-btn').onclick = () => addToCart(p);
+            document.getElementById('product-modal').style.display = 'flex';
+        };
+
+        function addToCart(p) { const item = cart.find(i => i.id === p.id); if(item) item.qty++; else cart.push({...p, qty: 1}); updateCartUI(); closeModal('product-modal'); }
+        function updateCartUI() { document.getElementById('cart-badge').innerText = cart.reduce((s, i) => s + i.qty, 0); }
+        window.openCartModal = () => {
+            const container = document.getElementById('cart-items-container'); container.innerHTML = ''; let total = 0;
+            cart.forEach((item, idx) => { total += (item.price * item.qty); container.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>${item.name} x${item.qty}</span><span>₹${item.price * item.qty} <button onclick="window.removeCart(${idx})">x</button></span></div>`; });
+            document.getElementById('cart-total-display').innerText = `Total: ₹${total}`; document.getElementById('cart-modal').style.display = 'flex';
+        };
+        window.removeCart = (idx) => { cart.splice(idx, 1); updateCartUI(); window.openCartModal(); };
+        window.openCheckoutModal = () => { closeModal('cart-modal'); document.getElementById('checkout-modal').style.display = 'flex'; };
+
+        window.placeOrder = () => {
+            const nameEl = document.getElementById('checkout-name'); const phoneEl = document.getElementById('checkout-phone'); const addressEl = document.getElementById('checkout-address');
+            if(!nameEl.value || !phoneEl.value || !addressEl.value) return alert("Fill all fields");
+            const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            const order = { id: 'ORD'+Date.now(), customer: nameEl.value, email: currentUser.email, phone: phoneEl.value, address: addressEl.value, items: [...cart], total, date: new Date().toLocaleDateString() };
+            orders.push(order); localStorage.setItem('ask_orders', JSON.stringify(orders));
+            
+            emailjs.send("service_kujaglr", "template_2us7u98", { customer_name: nameEl.value, customer_email: currentUser.email, order_id: order.id, total_amount: total, delivery_address: addressEl.value })
+            .then(() => { 
+                cart = []; updateCartUI(); 
+                nameEl.value = ''; phoneEl.value = ''; addressEl.value = ''; // ERASE TEXT
+                closeModal('checkout-modal'); document.getElementById('success-modal').style.display = 'flex'; 
+            });
+        };
+
+        window.openContestModal = () => { document.getElementById('contest-modal').style.display = 'flex'; if(currentUser) document.getElementById('contest-email').value = currentUser.email; };
+        window.submitContestScreenshot = () => {
+            const email = document.getElementById('contest-email').value; const fileInput = document.getElementById('contest-screenshot'); const file = fileInput.files[0];
+            if(!email || !file) return alert("Email and Screenshot required");
+            const reader = new FileReader(); reader.onload = (e) => {
+                const base64 = e.target.result.split(',')[1];
+                fetch("https://script.google.com/macros/s/AKfycbzEYly4SgoEF0vdyEH8aMBV5y90y85va-Or9LmKc8SFrgWWc4IvpbQeVNQ17VCuiVWLYw/exec", { method: 'POST', body: JSON.stringify({ email, mimeType: file.type, filename: "Sub_"+email, fileData: base64 }) })
+                .then(() => { alert("Uploaded!"); fileInput.value = ''; closeModal('contest-modal'); });
+            };
+            reader.readAsDataURL(file);
+        };
+
+        function renderAdmin() {
+            document.getElementById('order-count').innerText = orders.length; const list = document.getElementById('orders-list'); list.innerHTML = '';
+            [...orders].reverse().forEach(o => { list.innerHTML += `<tr><td style="border:1px solid #ddd; padding:8px;">${o.id}<br>${o.date}</td><td style="border:1px solid #ddd; padding:8px;">${o.customer}<br>${o.phone}</td><td style="border:1px solid #ddd; padding:8px;">${o.items.map(i => i.name).join(', ')}</td><td style="border:1px solid #ddd; padding:8px;">₹${o.total}</td></tr>`; });
+            const pList = document.getElementById('admin-product-list'); pList.innerHTML = '';
+            products.forEach(p => { pList.innerHTML += `<tr><td style="border:1px solid #ddd; padding:8px;">${p.name}</td><td style="border:1px solid #ddd; padding:8px;">₹${p.price}</td><td style="border:1px solid #ddd; padding:8px;"><button onclick="window.delProduct(${p.id})">Delete</button></td></tr>`; });
+        }
+        window.addProduct = () => {
+            const nameEl = document.getElementById('new-prod-name'); const priceEl = document.getElementById('new-prod-price'); const imgEl = document.getElementById('new-prod-img');
+            if(!nameEl.value || !priceEl.value) return alert("Enter Name and Price");
+            products.push({ id: Date.now(), name: nameEl.value, price: parseInt(priceEl.value), img: imgEl.value || "https://placehold.co/300x300?text=New" });
+            localStorage.setItem('ask_products', JSON.stringify(products)); 
+            nameEl.value = ''; priceEl.value = ''; imgEl.value = ''; // ERASE TEXT
+            renderAdmin();
+        };
+        window.delProduct = (id) => { products = products.filter(p => p.id !== id); localStorage.setItem('ask_products', JSON.stringify(products)); renderAdmin(); };
+    </script>
+</body>
+</html>
